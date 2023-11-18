@@ -5,7 +5,7 @@
  */
 
 
-// Do³¹czenie wszelkich potrzebnych plików nag³ówkowych
+// Do³¹czenie wszelkich potrzeddbnych plików nag³ówkowych
 #include "usbstk5515.h"
 #include "usbstk5515_led.h"
 #include "aic3204.h"
