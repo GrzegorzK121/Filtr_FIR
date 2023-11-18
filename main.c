@@ -1,11 +1,10 @@
 /*
- * Projekt z przedmiotu Zastosowania Procesorów Sygna³owych
+ * Projekt z przedmiotu Zastosowania Procesoré—š Sygnaé€™wych
  * Szablon projektu dla DSP TMS320C5535
- * Grupa T1 1 Stencel Kaczorek
  */
 
 
-// Do³¹czenie wszelkich potrzeddbnych plikójw nag³ówkowych
+// Doç« czenie wszelkich potrzeddbnych pliké©w nagå ¯wkowych
 #include "usbstk5515.h"
 #include "usbstk5515_led.h"
 #include "aic3204.h"
@@ -15,15 +14,15 @@
 #include "pushbuttons.h"
 #include "dsplib.h"
 
-//Krok fazy dla sygna³u pi³okszta³tnego (100Hz)
+//Krok fazy dla sygnaé€ pié€™ksztaé€Ÿnego (100Hz)
 #define KROK_FAZY_PILO 136
-// Czêstotliwoœæ próbkowania (48 kHz)
+// Czç˜°totliwoî°« prékowania (48 kHz)
 #define CZESTOTL_PROBKOWANIA 48000L
-// Wzmocnienie wejœcia w dB: 0 dla wejœcia liniowego, 30 dla mikrofonowego
+// Wzmocnienie wejî¯Šia w dB: 0 dla wejî¯Šia liniowego, 30 dla mikrofonowego
 #define WZMOCNIENIE_WEJSCIA_dB 30
 
 #define X 2148
-#define N 52  // rz¹d 51 + 1 = 52
+#define N 52  // rzé‰… 51 + 1 = 52
 #define fc 1760
 
 
@@ -41,54 +40,54 @@ short bufor_roboczy[N+2];
 
 void rand16init();
 
-// G³ówna procedura programu
+// Gå ¯wna procedura programu
 
 void main(void) {
 
-	// Inicjalizacja uk³adu DSP
+	// Inicjalizacja ukè±‰du DSP
 	USBSTK5515_init();			// BSL
 	pll_frequency_setup(100);	// PLL 100 MHz
 	aic3204_hardware_init();	// I2C
-	aic3204_init();				// kodek dŸwiêku AIC3204
+	aic3204_init();				// kodek dî¶µiç˜¯u AIC3204
 	USBSTK5515_ULED_init();		// diody LED
 	SAR_init_pushbuttons();		// przyciski
-	oled_init();				// wyœwielacz LED 2x19 znaków
+	oled_init();				// wyî¯ielacz LED 2x19 znaké—š
 
-	// ustawienie czêstotliwoœci próbkowania i wzmocnienia wejœcia
+	// ustawienie czç˜°totliwoî¯Ši prékowania i wzmocnienia wejî¯Šia
 	set_sampling_frequency_and_gain(CZESTOTL_PROBKOWANIA, WZMOCNIENIE_WEJSCIA_dB);
 
-	// wypisanie komunikatu na wyœwietlaczu
-	// 2 linijki po 19 znaków, tylko wielkie angielskie litery
+	// wypisanie komunikatu na wyî¯ietlaczu
+	// 2 linijki po 19 znaké—š, tylko wielkie angielskie litery
 	oled_display_message("PROJEKT ZPS        ", "                   ");
 
 	// 'tryb_pracy' oznacza tryb pracy wybrany przyciskami
 	unsigned int tryb_pracy = 0;
 	unsigned int poprzedni_tryb_pracy = 99;
 
-	// zmienne do przechowywania wartoœci próbek
+	// zmienne do przechowywania wartoî¯Ši préek
 	short lewy_wejscie, prawy_wejscie, lewy_wyjscie, prawy_wyjscie;
 
-	// Przetwarzanie próbek sygna³u w pêtli
+	// Przetwarzanie préek sygnaé€ w pçš»li
 	while (1) {
 
-		// odczyt próbek audio, zamiana na mono
+		// odczyt préek audio, zamiana na mono
 		aic3204_codec_read(&lewy_wejscie, &prawy_wejscie);
 		short mono_wejscie = (lewy_wejscie >> 1) + (prawy_wejscie >> 1);
 
-		// sprawdzamy czy wciœniêto przycisk
-		// argument: maksymalna liczba obs³ugiwanych trybów
+		// sprawdzamy czy wciî¯•içš»o przycisk
+		// argument: maksymalna liczba obsé€giwanych trybé—š
 		tryb_pracy = pushbuttons_read(4);
-		if (tryb_pracy == 0) // oba wciœniête - wyjœcie
+		if (tryb_pracy == 0) // oba wciî¯•içš»e - wyjî¯Šie
 			break;
 		else if (tryb_pracy != poprzedni_tryb_pracy) {
-			// nast¹pi³a zmiana trybu - wciœniêto przycisk
+			// nasté›·iè±‰ zmiana trybu - wciî¯•içš»o przycisk
 			
 		    for(int i = 0; i < N; i++)
                 buf_roboczy[i] = 0;
 			
-			USBSTK5515_ULED_setall(0x0F); // zgaszenie wszystkich diód
+			USBSTK5515_ULED_setall(0x0F); // zgaszenie wszystkich diéš
 			if (tryb_pracy == 1) {
-				// wypisanie informacji na wyœwietlaczu
+				// wypisanie informacji na wyî¯ietlaczu
 				oled_display_message("PROJEKT ZPS        ", "TRYB 1             ");
 				// zapalenie diody nr 1
 				USBSTK5515_ULED_on(0);
@@ -107,7 +106,7 @@ void main(void) {
 		}
 
 
-		// zadadnicze przetwarzanie w zale¿noœci od wybranego trybu pracy
+		// zadadnicze przetwarzanie w zaleç©oî¯Ši od wybranego trybu pracy
 
 		if (tryb_pracy == 1) 
 		{
@@ -158,13 +157,13 @@ void main(void) {
 			index = 0; //tu breakpoint do wykresu
 		}
 
-		// zapisanie wartoœci na wyjœcie audio
+		// zapisanie wartoî¯Ši na wyjî¯Šie audio
 		aic3204_codec_write(lewy_wyjscie, prawy_wyjscie);
 
 	}
 
 
-	// zakoñczenie pracy - zresetowanie kodeka
+	// zakoézenie pracy - zresetowanie kodeka
 	aic3204_disable();
 	oled_display_message("KONIEC PRACY       ", "                   ");
 	while (1);
